@@ -160,6 +160,7 @@ $(document).ready(function(){
             addmovie(user);
         });
         showmovie(user);
+        recommendmovie(user);
     }
     
     function addmovie(user){
@@ -214,6 +215,20 @@ $(document).ready(function(){
             }
         });
     }
+    
+    function recommendmovie(user){
+        $.ajax({
+            type: "POST",
+            url: "getuserrecommendation.php",
+            data: { username: user.username },
+            success: function(data){
+                console.log("get movierec conected");
+                console.log(data);
+                $("#reclst").html(data);
+            }
+        });
+    }
+    function movieallreview(moviename){}
     
     function moviereview(user, moviename){
         $.ajax({

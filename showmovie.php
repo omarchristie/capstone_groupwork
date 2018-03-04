@@ -25,7 +25,7 @@ if($subject == "all"){
             echo '<h1>'."Movie Rating: ". $row['movierating'] . '</h3>';
             echo '<h3>'."Review: " . '</h3>';
             echo '<p>'. $row['moviereview'] . '</p>';
-            echo '<button id="return">Return to inbox</button>';
+            echo '<button id="return">Return</button>';
         }
     }
 }
