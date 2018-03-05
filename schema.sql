@@ -51,6 +51,7 @@ INSERT INTO `user_rating` VALUES (NULL, 'stramsey', 'Rambo', '3.0', 'rambo could
 INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Gorden State', '5.0', 'Gordon State was more develope', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Before Sunset', '2.0', 'Hardly like', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Training Day', '3.0', 'Average', NOW());
+INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Dance Floor', '4.0', 'good but not great', NOW());
 
 INSERT INTO `user_rating` VALUES (NULL, 'knelson', 'Gorden State', '3.0', 'Gordon State was not more develope', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'knelson', 'Training Day', '4.0', 'Apart from minor, liked a lot', NOW());

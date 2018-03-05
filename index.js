@@ -224,7 +224,11 @@ $(document).ready(function(){
             success: function(data){
                 console.log("get movierec conected");
                 console.log(data);
-                $("#reclst").html(data);
+                if (data){
+                    $("#reclst").html(data);
+                }else{
+                    $("#reclst").html("No movie recommendation is available for you at this time.")
+                }
             }
         });
     }

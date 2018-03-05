@@ -25,17 +25,5 @@
             echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $movie . ' -------     ' .'Movie Rating:'. $rating .'</p>';
             echo '</ul>';
     	}
-    
-    /*if(empty($recommedation)){
-        echo 'No Recommendation available';
-    }else{
-        foreach($recommedation as $movie=>$rating)
-    	{
-    	    echo '<ul>';
-            echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $movie . ' -------     ' .'Movie Rating:'. $rating .'</p>';
-            echo '</ul>';
-    	}
-    }
-    */
     	
 ?>
