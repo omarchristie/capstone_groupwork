@@ -21,9 +21,11 @@
     
     foreach($recommedation as $movie=>$rating)
     	{
-    	    echo '<ul>';
-            echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $movie . ' -------     ' .'Movie Rating:'. $rating .'</p>';
-            echo '</ul>';
+    	    if ($rating > 2){
+    	        echo '<ul>';
+                echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $movie . ' -------     ' .'Movie Rating:'. $rating .'</p>';
+                echo '</ul>';   
+    	    }
     	}
     	
 ?>
