@@ -20,9 +20,9 @@ if($subject == "all"){
     $result2 = $db->query("SELECT * FROM user_rating WHERE username='$username' ORDER BY date_added DESC LIMIT 20");
     foreach ($result2 as $row) {
         if($row['moviename'] == $subject){
-            echo '<h3>'."Date Sent: ". $row['date_added'] . '</h3>';
-            echo '<h1>'."Movie Name: ". $row['moviename'] . '</h3>';
-            echo '<h1>'."Movie Rating: ". $row['movierating'] . '</h3>';
+            echo '<h3>'."Date added: ". $row['date_added'] . '</h3>';
+            echo '<h1>'."Movie Name: ". $row['moviename'] . '</h1>';
+            echo '<h1>'."Movie Rating: ". $row['movierating'] . '</h1>';
             echo '<h3>'."Review: " . '</h3>';
             echo '<p>'. $row['moviereview'] . '</p>';
             echo '<button id="return">Return</button>';

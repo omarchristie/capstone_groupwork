@@ -12,12 +12,12 @@ $(document).ready(function(){
                 }
             }
 
-            loadLoginPage();
+            loadLoginPage(session);
         }
     });
     
     // load login page
-    function loadLoginPage(){
+    function loadLoginPage(session){
         $.ajax({
             url: "login.html",
             success: function(page){
@@ -39,19 +39,22 @@ $(document).ready(function(){
                     e.preventDefault(); // avoid to execute the actual submit of the form.
                 });
                 $(".reg").click(function(){
-                    register();
+                    register(session);
+                });
+                $("#about").click(function(){
+                    about(session);
                 });
             }
         });
     }
     
-    function register(){
+    function register(session){
         $.ajax({
             url: "register.html",
             success: function(page){
                 $("body").html(page);
                 $('.goback').click(function() {
-                    loadLoginPage();
+                    loadLoginPage(session);
                 });
                 $("#registrationForm").submit(function(e){
                     $.ajax({
@@ -83,7 +86,7 @@ $(document).ready(function(){
         });
     }
 
-    function login(result){
+    function login(result,session){
         var temp = null;
         
         try{
@@ -106,16 +109,16 @@ $(document).ready(function(){
                 $.ajax({
                     url: "admin.html",
                     success: function(page){
-                       loadAdminPage(result, page);
+                       loadAdminPage(result, page, session);
                     }
                 });
             } else if (temp.type == "user"){
-                loadUser(result);
+                loadUser(result, session);
             }
         
         }
     }
-    function loadAdminPage(admin, page){
+    function loadAdminPage(admin, page, session){
         var temp = null;
          try{
              temp = JSON.parse(admin);
@@ -129,19 +132,20 @@ $(document).ready(function(){
 
         // logout
         $("#logout").click(function(){
-            logOut();
+            logOut(session);
         });
     }
     
-    function loadUser(user){
+    function loadUser(user, session){
         $.ajax({
             url: "user.html",
             success: function(page){
-                loadUserPage(user, page);
+                loadUserPage(user, page, session);
             }
         });
     }
-    function loadUserPage(user,page){
+    
+    function loadUserPage(user,page, session){
         var temp = null;
         try{
             temp = JSON.parse(user);
@@ -154,22 +158,67 @@ $(document).ready(function(){
 
         // logout
         $("#logout").click(function(){
-            logOut();
+            logOut(session);
         });
         $("#addmovie").click(function(){
-            addmovie(user);
+            addmovie(user, session);
         });
-        showmovie(user);
-        recommendmovie(user);
+         $("#hot").click(function(){
+            popularmoviepage(user, session);
+        });
+        showmovie(user, session);
+        recommendmovie(user, session);
     }
     
-    function addmovie(user){
+    function popularmoviepage(user, session){
+        $.ajax({
+            url: "popular.html",
+            success: function(page){
+                $("#displayblock").html(page);
+                popularmovie(user);
+                $("#return").click(function() {
+                    loadUser(user, session);
+                });
+            }
+        });
+    }
+    
+    
+    function popularmovie(user, session){
+        $.ajax({
+            url: "popular.php",
+            success: function(data){
+                console.log("Popular movie connect");
+                if (data){
+                    $("#hotblock").html(data);
+                }else{
+                    $("#hotblock").html("nothing returned");
+                }
+                 $(".hotmovie").each(function() {
+                    $(this).click(function() {
+                        var moviename= $(this).attr("id");
+                         $.ajax({
+                            url: "reviews.html",
+                            success: function(page){
+                                $("#displayblock").html(page);
+                                movieallreview(user, moviename, session);
+                            }
+                         });
+                    });
+                        
+                });
+            }
+        });
+    }
+    
+    
+    function addmovie(user, session){
         $.ajax({
             url: "addmovie.html",
             success: function(page){
                 $("body").html(page);
                 $("#returntouser").click(function() {
-                    loadUser(user)
+                    loadUser(user, session)
                 })
                 $("#addmovierating").submit(function(e){
                     $.ajax({
@@ -186,7 +235,7 @@ $(document).ready(function(){
                                 loadUser(user);
                                 alert("Movie Rating added!");
                             }else{
-                                alert("Movie ratings failed to add")
+                                $("#message").html(data);
                             }
                         }
                     });
@@ -196,7 +245,7 @@ $(document).ready(function(){
         });
     }
     
-    function showmovie(user){
+    function showmovie(user, session){
         $.ajax({
             type: "POST",
             url: "showmovie.php",
@@ -207,16 +256,16 @@ $(document).ready(function(){
                 console.log(data);
                 $("#mlst").html(data);
                 $(".movie").each(function(){
-                $(this).click(function(){
-                    var moviename = $(this).attr("id");
-                        moviereview(user, moviename);
+                    $(this).click(function(){
+                        var moviename = $(this).attr("id");
+                            moviereview(user, moviename, session);
                     });
                 });
             }
         });
     }
     
-    function recommendmovie(user){
+    function recommendmovie(user, session){
         $.ajax({
             type: "POST",
             url: "getuserrecommendation.php",
@@ -227,14 +276,45 @@ $(document).ready(function(){
                 if (data){
                     $("#reclst").html(data);
                 }else{
-                    $("#reclst").html("No movie recommendation is available for you at this time.")
+                    $("#reclst").html("<p>No movie recommendation is available for you at this time.</p><p> Check Popular movie page for recommendation</p>")
                 }
+                $(".movierec").each(function() {
+                    $(this).click(function() {
+                        var moviename= $(this).attr("id");
+                         $.ajax({
+                            url: "reviews.html",
+                            success: function(page){
+                                $("#displayblock").html(page);
+                                movieallreview(user, moviename, session);
+                            }
+                         });
+                    });
+                        
+                });
             }
         });
     }
-    function movieallreview(moviename){}
+    function movieallreview(user, moviename, session){
+        $.ajax({
+            type: "POST",
+            url: "reviews.php",
+            data: { movienamed: moviename },
+            success: function(data){
+                console.log("show all review conected");
+                console.log(data);
+                if (data){
+                    $("#reviewblock").html(data);
+                }else{
+                    $("#reviewblock").html("nothing returned");
+                }
+                $("#return").click(function() {
+                    loadUser(user, session);
+                });
+            }
+        });
+    }
     
-    function moviereview(user, moviename){
+    function moviereview(user, moviename, session){
         $.ajax({
             type: "POST",
             url: "showmovie.php",
@@ -245,20 +325,44 @@ $(document).ready(function(){
                 console.log(data);
                 $("#mlst").html(data);
                 $("#return").click(function(){
-                    loadUser(user);
+                    loadUser(user, session);
                 });
             }
         });
     }
     
-    function logOut(){
+    function logOut(session){
         if(confirm("Are you sure you want to log out?")){
             $.ajax({
                 url: "logout.php",
                 success: function(data){
-                    loadLoginPage();
+                    loadLoginPage(session);
                 }
             });
         }
     }
+    
+    
+    function about(session){
+        $.ajax({
+            url: "about.html",
+            success: function(data){
+                $("body").html(data);
+                $("#return").click(function() {
+                    if(session.hasOwnProperty("user")){
+                        login(session.user);
+                    }else{
+                        loadLoginPage(session);
+                    }
+                });
+            }
+        });
+    }
+    
+    
+    function instruction(){
+        
+    }
+    
+    
 });//on page load ends here
