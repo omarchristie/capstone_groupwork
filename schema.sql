@@ -38,7 +38,7 @@ INSERT INTO `user_rating` VALUES (NULL, 'ochristie', 'Rambo', '5.0', 'The best s
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Titan', '4.0', 'very good show', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Avatar', '4.0', 'the best', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Rambo', '5.0', 'rambo not bad', NOW());
-INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Rockey', '3.0', ' rockey not bad', NOW());
+INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Rockey', '5.0', ' rockey not bad', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Gorden', '2.0', 'gorden not bad', NOW());
 
 INSERT INTO `user_rating` VALUES (NULL, 'sramsey', 'Avatar', '3.0', 'avatar not bad', NOW());

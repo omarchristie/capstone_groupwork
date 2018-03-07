@@ -12,13 +12,11 @@ function similarity_distance($matrix,$person1,$person2)
 		 
 		 if(array_key_exists($key,$matrix[$person2]))
 		 {
-		 	
-		 	$similar[$key]=1;
-		
+			 $similar[$key]=1;
 		 }
 	 }
 		 
-		 if($similar[$key]==0)
+		 if($similar==0)
 		 {
 			 return 0;
 		 }
@@ -63,7 +61,7 @@ function getRecommendation($matrix,$person)
 			
 			$sim=similarity_distance($matrix,$person,$otherPerson);
 			
-			if($sim>0)
+			if($sim>0.4)
 			{
 			foreach($matrix[$otherPerson] as $key=>$value)
 			{
@@ -101,7 +99,7 @@ function getRecommendation($matrix,$person)
 	foreach($total as $key=>$value)
 	{
 		
-		$ranks[$key]=number_format($value/$simsums[$key], 2, '.', '');
+		$ranks[$key]=$value/$simsums[$key];
 		
 	}
 	
@@ -110,4 +108,4 @@ function getRecommendation($matrix,$person)
 	return $ranks;
 }
 
-?>
+?> 
