@@ -41,12 +41,12 @@ INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Rambo', '5.0', 'rambo not bad
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Rockey', '5.0', ' rockey not bad', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'lsmith', 'Gorden', '2.0', 'gorden not bad', NOW());
 
-INSERT INTO `user_rating` VALUES (NULL, 'sramsey', 'Avatar', '3.0', 'avatar not bad', NOW());
-INSERT INTO `user_rating` VALUES (NULL, 'sramsey', 'Thor', '4.0', 'Thor not bad', NOW());
-
 INSERT INTO `user_rating` VALUES (NULL, 'stramsey', 'Thor', '3.0', 'thor not that bad', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'stramsey', 'Avatar', '2.0', 'user thinksS bad', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'stramsey', 'Rambo', '3.0', 'rambo could develope more', NOW());
+
+INSERT INTO `user_rating` VALUES (NULL, 'sramsey', 'Avatar', '3.0', 'avatar not bad', NOW());
+INSERT INTO `user_rating` VALUES (NULL, 'sramsey', 'Thor', '4.0', 'Thor not bad', NOW());
 
 INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Gorden State', '4.0', 'Gordon State was more develope', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'Before Sunset', '2.0', 'Hardly like', NOW());
