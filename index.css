@@ -26,7 +26,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  width: 350px;
+  width: 700px;
   height: 400px;
   background-color:black;
   margin-top: 180px;
@@ -139,4 +139,22 @@ li:hover{
 
 #userrecommendation{
     float: left;
+}
+
+#movies img, #movie img{
+  width:100%;
+}
+
+@media(min-width:960px){
+  #movies .col-md-3 .well{
+    height: 390px;
+  }
+
+#movies .col-md-3 img{
+   height:240px;
+}
+
+}
+#movie{
+    margin: 15px;
 }

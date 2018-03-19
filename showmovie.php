@@ -10,7 +10,7 @@ if($subject == "all"){
     if($result->num_rows > 0){
         foreach ($result as $row) {
             echo '<ul>';
-            echo '<p class="movie" id="'.$row['moviename'].'">'.'Movie Name:'. $row['moviename'] . ' -------     ' .'Movie Rating:'. $row['movierating'] . '----'.'Date Reviewed:'. $row['date_added'].'</p>';
+            echo '<p class="movie '.$row[moviename].'" id="'.$row['movieid'].'">'.'Movie Name:'. $row['moviename'] . ' -------     ' .'Movie Rating:'. $row['movierating'] . '----'.'Date Reviewed:'. $row['date_added'].'</p>';
             echo '</ul>';
         }
     }else{
@@ -19,11 +19,11 @@ if($subject == "all"){
 }else{
     $result2 = $db->query("SELECT * FROM user_rating WHERE username='$username' ORDER BY date_added DESC LIMIT 20");
     foreach ($result2 as $row) {
-        if($row['moviename'] == $subject){
-            echo '<h3>'."Date added: ". $row['date_added'] . '</h3>';
-            echo '<h1>'."Movie Name: ". $row['moviename'] . '</h1>';
-            echo '<h1>'."Movie Rating: ". $row['movierating'] . '</h1>';
-            echo '<h3>'."Review: " . '</h3>';
+        if($row['movieid'] == $subject){
+            echo '<h6>'."Date added: ". $row['date_added'] . '</h6>';
+            echo '<h4>'."Movie Name: ". $row['moviename'] . '</h4>';
+            echo '<h5>'."Movie Rating: ". $row['movierating'] . '</h5>';
+            echo '<h5>'."Review: " . '</h5>';
             echo '<p>'. $row['moviereview'] . '</p>';
             echo '<button id="return">Return</button>';
         }

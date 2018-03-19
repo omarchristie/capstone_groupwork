@@ -161,7 +161,7 @@ $(document).ready(function(){
             logOut(session);
         });
         $("#addmovie").click(function(){
-            addmovie(user, session);
+            searchmovie(user, session);
         });
          $("#hot").click(function(){
             popularmoviepage(user, session);
@@ -196,12 +196,13 @@ $(document).ready(function(){
                 }
                  $(".hotmovie").each(function() {
                     $(this).click(function() {
-                        var moviename= $(this).attr("id");
+                        var movieid= $(this).attr("id");
                          $.ajax({
                             url: "reviews.html",
                             success: function(page){
                                 $("#displayblock").html(page);
-                                movieallreview(user, moviename, session);
+                                movieallreview(user, movieid, session);
+                                getmovieinfo(movieid);
                             }
                          });
                     });
@@ -212,11 +213,108 @@ $(document).ready(function(){
     }
     
     
-    function addmovie(user, session){
+    function searchmovie(user, session){
+        $.ajax({
+            url: "searchmovie.html",
+            success: function(page){
+                $("body").html(page);
+                $("#returntouser").click(function() {
+                    loadUser(user, session)
+                })
+                $("#searchmovie").submit(function(e){
+                    $.ajax({
+                        type: "GET",
+                        url: "https://www.omdbapi.com/?s="+$('#moviename').val()+"&apikey=506f97",
+                        success: function(data){
+                            console.log(data)
+                            let movies = data.Search;
+                            let output = '';
+                            $.each(movies, (index, movie) => {
+
+                            output += `
+                    
+                              <div class="col-md-3">
+                    
+                                <div class="well text-center">
+                    
+                                  <img src="${movie.Poster}">
+                    
+                                  <h5>${movie.Title}</h5>
+                                  <button type="button" class="ratemovie ${movie.Title}" id="${movie.imdbID}">Rate!</button> 
+                    
+                                </div>
+                    
+                              </div>
+                    
+                            `;
+                    
+                          });
+                          $('#movies').html(output);
+                          $(".ratemovie").each(function(){
+                            $(this).click(function(){
+                                var movieid = $(this).attr("id");
+                                var classname= $(this).attr("class").split(" ")[0];
+                                var moviename = $(this).attr("class").slice(classname.length+1);
+                                    addmovie(user, moviename, movieid, session);
+                            });
+                        });
+                        }
+                        
+                    });
+                    e.preventDefault();
+                });
+            }
+        });
+    }
+    
+    function getmovieinfo(movieid){
+        $.ajax({
+            type: "GET",
+            url: "https://www.omdbapi.com/?i="+movieid+"&apikey=506f97",
+            success: function(data){
+                console.log(data);
+                let movie = data;
+                let output =`
+                <div class="row">
+                  <div class="col-md-4">
+                    <img src="${movie.Poster}" class="thumbnail">
+                  </div>
+                  <div class="col-md-8">
+                    <h2>${movie.Title}</h2>
+                    <ul class="list-group">
+                      <li class="list-group-item"><strong>Genre:</strong> ${movie.Genre}</li>
+                      <li class="list-group-item"><strong>Released:</strong> ${movie.Released}</li>
+                      <li class="list-group-item"><strong>Rated:</strong> ${movie.Rated}</li>
+                      <li class="list-group-item"><strong>IMDB Rating:</strong> ${movie.imdbRating}</li>
+                      <li class="list-group-item"><strong>Director:</strong> ${movie.Director}</li>
+                      <li class="list-group-item"><strong>Writer:</strong> ${movie.Writer}</li>
+                      <li class="list-group-item"><strong>Actors:</strong> ${movie.Actors}</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="well">
+                    <h3>Plot</h3>
+                    ${movie.Plot}
+                    <hr>
+                    <a href="http://imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-primary">Watch trailer</a>
+                  </div>
+                </div>
+              `;
+        
+              $('#movie').html(output);
+            }
+        });
+    }
+    
+    
+    function addmovie(user, movienamed, movieidd, session){
         $.ajax({
             url: "addmovie.html",
             success: function(page){
                 $("body").html(page);
+                $("#moviename").html(movienamed);
+                console.log(movieidd);
                 $("#returntouser").click(function() {
                     loadUser(user, session)
                 })
@@ -224,7 +322,8 @@ $(document).ready(function(){
                     $.ajax({
                         type: "POST",
                         url: "addmovie.php",
-                        data: { moviename: $('#moviename').val(),
+                        data: { moviename: movienamed,
+                            movieid: movieidd,
                             movierating: $('#movierating').val(),
                             review: $('#review').val(), 
                             username: user.username,
@@ -243,6 +342,7 @@ $(document).ready(function(){
                 });
             }
         });
+
     }
     
     function showmovie(user, session){
@@ -257,8 +357,8 @@ $(document).ready(function(){
                 $("#mlst").html(data);
                 $(".movie").each(function(){
                     $(this).click(function(){
-                        var moviename = $(this).attr("id");
-                            moviereview(user, moviename, session);
+                        var movieid = $(this).attr("id");
+                            moviereview(user, movieid, session);
                     });
                 });
             }
@@ -280,12 +380,13 @@ $(document).ready(function(){
                 }
                 $(".movierec").each(function() {
                     $(this).click(function() {
-                        var moviename= $(this).attr("id");
+                        var movieid= $(this).attr("id");
                          $.ajax({
                             url: "reviews.html",
                             success: function(page){
                                 $("#displayblock").html(page);
-                                movieallreview(user, moviename, session);
+                                movieallreview(user, movieid, session);
+                                getmovieinfo(movieid);
                             }
                          });
                     });
@@ -294,11 +395,11 @@ $(document).ready(function(){
             }
         });
     }
-    function movieallreview(user, moviename, session){
+    function movieallreview(user, movieidd, session){
         $.ajax({
             type: "POST",
             url: "reviews.php",
-            data: { movienamed: moviename },
+            data: { movieid: movieidd },
             success: function(data){
                 console.log("show all review conected");
                 console.log(data);
@@ -314,12 +415,12 @@ $(document).ready(function(){
         });
     }
     
-    function moviereview(user, moviename, session){
+    function moviereview(user, movieid, session){
         $.ajax({
             type: "POST",
             url: "showmovie.php",
             data: { username: user.username, 
-            subject: moviename },
+            subject: movieid },
             success: function(data){
                 console.log("show messages conected");
                 console.log(data);

@@ -11,7 +11,7 @@
     
     while($movie=mysqli_fetch_array($movies))
     {
-    	$matrix[$movie['username']][$movie['moviename']]=$movie['movierating'];
+    	$matrix[$movie['username']][$movie['movieid']]=$movie['movierating'];
     }
     /*echo "<pre>";
     print_r($matrix); 
@@ -22,8 +22,11 @@
     foreach($recommedation as $movie=>$rating)
     	{
     	    if ($rating > 2){
+    	        $movienames= $db->query("SELECT DISTINCT moviename FROM user_rating WHERE movieid='$movie'");
+    	        $moviename=array();
+    	        $moviename=mysqli_fetch_array($movienames);
     	        echo '<ul>';
-                echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $movie . ' -------     ' .'Movie Rating:'. $rating .'</p>';
+                echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $moviename[0] . ' -------     ' .'Movie Rating:'. $rating .'</p>';
                 echo '</ul>';   
     	    }
     	}
