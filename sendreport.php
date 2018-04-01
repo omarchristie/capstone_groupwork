@@ -11,7 +11,7 @@
 	
     $r = $db->query("SHOW TABLE STATUS WHERE name='message'");
     $new_message_id = $r->fetch_assoc()["Auto_increment"];
-	$success = $db->query( "INSERT INTO message (id, username, movieid, subject, date_sent) VALUES ('$username', '$movieid', '$reason', NOW())");
+	$success = $db->query( "INSERT INTO message (username, movieid, subject, date_sent) VALUES ('$username', '$movieid', '$reason', NOW())");
 	
 	
 	if(!$success)
