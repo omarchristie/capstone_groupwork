@@ -57,5 +57,17 @@ INSERT INTO `user_rating` VALUES (NULL, 'pportundo', 'tt0327084', 'Over the Hedg
 INSERT INTO `user_rating` VALUES (NULL, 'knelson', 'tt6099358', 'Golden State', '3.0', 'Gordon State was not more develope', NOW());
 INSERT INTO `user_rating` VALUES (NULL, 'knelson', 'tt0139654', 'Training Day', '4.0', 'Apart from minor, liked a lot', NOW());
 
-
-
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+	`id` int(11) PRIMARY KEY NOT NULL auto_increment,
+	`username` varchar(20) NOT NULL,
+	`movieid` varchar(20) NOT NULL,
+	`subject` varchar(128) NOT NULL,
+	`date_sent` datetime NOT NULL
+);
+DROP TABLE IF EXISTS `message_read`;
+CREATE TABLE `message_read` (
+	`id` int(11) PRIMARY KEY NOT NULL auto_increment,
+	`message_id` varchar(20) NOT NULL,
+	`date` datetime NOT NULL
+);

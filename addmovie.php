@@ -23,7 +23,7 @@
     	}
 	}
 	
-	$success = $db->query( "INSERT INTO user_rating (username, moviename, movierating, moviereview, date_added) VALUES ('$username', '$moviename', '$movierating', '$review', NOW())");
+	$success = $db->query( "INSERT INTO user_rating (username, movieid, moviename, movierating, moviereview, date_added) VALUES ('$username', '$movieid', '$moviename', '$movierating', '$review', NOW())");
 	
 	
 	if(!$success)

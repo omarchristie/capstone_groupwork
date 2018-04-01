@@ -23,12 +23,12 @@
 	array_multisort($rating_list,SORT_DESC);
 	foreach($rating_list as $movie=>$rating)
     	{
-    	    if ($rating > 2){
+    	    if ($rating > 2.5){
     	    	$movienames= $db->query("SELECT DISTINCT moviename FROM user_rating WHERE movieid='$movie'");
     	        $moviename=array();
     	        $moviename=mysqli_fetch_array($movienames);
     	        echo '<ul>';
-                echo '<p class="hotmovie" id="'.$movie.'">'.'Movie Name:'. $moviename[0] . ' -------     ' .'Movie Rating:'. $rating .'</p>';
+                echo '<p class="hotmovie" id="'.$movie.'">'.'Movie Name:'. $moviename[0] . ' -------     ' .'Movie Rating:'. round($rating, 1) .'</p>';
                 echo '</ul>';   
     	    }
     	}

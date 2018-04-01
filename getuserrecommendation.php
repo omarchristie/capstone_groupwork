@@ -6,6 +6,12 @@
     $username = $_POST["username"];
     
     $movies= $db->query("select * from user_rating");
+    $result = $db->query("SELECT * FROM user_rating WHERE username='$username'");
+    
+    if($result->num_rows == 0){
+        echo "No movie recommendation";     
+        exit;
+    }
 
     $matrix=array();
     
@@ -21,12 +27,12 @@
     
     foreach($recommedation as $movie=>$rating)
     	{
-    	    if ($rating > 2){
+    	    if ($rating > 2.5){
     	        $movienames= $db->query("SELECT DISTINCT moviename FROM user_rating WHERE movieid='$movie'");
     	        $moviename=array();
     	        $moviename=mysqli_fetch_array($movienames);
     	        echo '<ul>';
-                echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $moviename[0] . ' -------     ' .'Movie Rating:'. $rating .'</p>';
+                echo '<p class="movierec" id="'.$movie.'">'.'Movie Name:'. $moviename[0] . ' -------     ' .'Movie Rating: '. round($rating, 1).'</p>';
                 echo '</ul>';   
     	    }
     	}

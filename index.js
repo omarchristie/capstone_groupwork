@@ -44,6 +44,12 @@ $(document).ready(function(){
                 $("#about").click(function(){
                     about(session);
                 });
+                $("#instruction").click(function(){
+                    instruction(session);
+                });
+                $("#logo").click(function(){
+                    logo(session);
+                });
             }
         });
     }
@@ -76,11 +82,22 @@ $(document).ready(function(){
                             } else if (data == "failed"){
                                 $("#error").html("Something went wrong, but we're not sure what.");
                             } else if (data == "success"){
-                                $("#error").html("Successfully registered.");
+                                loadLoginPage(session);
+                                alert("User Account Added!");
+                                
                             }
                         }
                     });
                     e.preventDefault();
+                });
+                $("#about").click(function(){
+                    about(session);
+                });
+                $("#instruction").click(function(){
+                    instruction(session);
+                });
+                $("#logo").click(function(){
+                    logo(session);
                 });
             }
         });
@@ -134,6 +151,7 @@ $(document).ready(function(){
         $("#logout").click(function(){
             logOut(session);
         });
+        getmessage(admin, page, session);
     }
     
     function loadUser(user, session){
@@ -219,35 +237,26 @@ $(document).ready(function(){
             success: function(page){
                 $("body").html(page);
                 $("#returntouser").click(function() {
-                    loadUser(user, session)
-                })
+                    loadUser(user, session);
+                });
                 $("#searchmovie").submit(function(e){
                     $.ajax({
                         type: "GET",
                         url: "https://www.omdbapi.com/?s="+$('#moviename').val()+"&apikey=506f97",
                         success: function(data){
-                            console.log(data)
+                            console.log(data);
                             let movies = data.Search;
                             let output = '';
                             $.each(movies, (index, movie) => {
-
                             output += `
-                    
                               <div class="col-md-3">
-                    
                                 <div class="well text-center">
-                    
-                                  <img src="${movie.Poster}">
-                    
+                                  <img src="${movie.Poster}" height="268" width="182">
                                   <h5>${movie.Title}</h5>
                                   <button type="button" class="ratemovie ${movie.Title}" id="${movie.imdbID}">Rate!</button> 
-                    
                                 </div>
-                    
                               </div>
-                    
                             `;
-                    
                           });
                           $('#movies').html(output);
                           $(".ratemovie").each(function(){
@@ -259,7 +268,6 @@ $(document).ready(function(){
                             });
                         });
                         }
-                        
                     });
                     e.preventDefault();
                 });
@@ -306,7 +314,6 @@ $(document).ready(function(){
             }
         });
     }
-    
     
     function addmovie(user, movienamed, movieidd, session){
         $.ajax({
@@ -411,6 +418,158 @@ $(document).ready(function(){
                 $("#return").click(function() {
                     loadUser(user, session);
                 });
+                $(".report").each(function(){
+                    $(this).click(function(){
+                        var movieid = $(this).attr("id");
+                        var classname= $(this).attr("class").split(" ")[0];
+                        var username = $(this).attr("class").slice(classname.length+1);
+                        report(user, username, movieid, session);
+                    });
+                });
+            }
+        });
+    }
+    
+    function report(user, usernamed, movieidd, session){
+        $.ajax({
+            url: "reason.html",
+            success: function(page){
+                $("body").html(page);
+                $("#returntouser").click(function() {
+                    loadUser(user, session)
+                });
+                $("#sendreport").submit(function(e){
+                    $.ajax({
+                        type: "POST",
+                        url: "sendreport.php",
+                        data: {username: usernamed,
+                            movieid: movieidd,
+                            reason: $('#body').val() },
+                        success: function(data){
+                            if(data == "success"){
+                                loadUser(user);
+                                alert("Message sent!");
+                            }else {
+                                alert("Message not sent.");
+                            }
+                        }   
+                    })
+                });
+            }
+        });
+    }
+    
+    function getmessage(admin, page, session){
+        $.ajax({
+            type: "POST",
+            url: "getmessage.php",
+            data: { subject: "all" },
+            success: function(data){
+                console.log("get messages conected");
+                console.log(data);
+                $("#msglst").html(data);
+                $(".messages").each(function(){
+                $(this).click(function(){
+                    var mid = $(this).attr("id");
+                        showMessage(mid, admin, page, session);
+                        markAsRead(mid);
+                    });
+                });
+            }
+        });
+    }
+    
+    
+    function showMessage(mid, admin, page, session){
+        $.ajax({
+            type: "POST",
+            url: "getmessage.php",
+            data: {subject: mid },
+            success: function(data){
+                console.log("show messages conected");
+                console.log(data);
+                $("#msglst").html(data);
+                $("#return").click(function(){
+                    loadAdminPage(admin, page, session);
+                });
+                $(".view").click(function(){ 
+                    var movieid = $(this).attr("id");
+                    var classname= $(this).attr("class").split(" ")[0];
+                    var username = $(this).attr("class").slice(classname.length+1);
+                    adminmoviereview(username, admin, movieid, page, session);
+                    
+                });
+                $(".delete").click(function(){ 
+                    var messageid = $(this).attr("id");
+                    deletemessage(admin, page, session, messageid);
+                    
+                });
+            }
+        });
+    }
+    
+    function deletemessage(admin, page, session, message_id){
+         $.ajax({
+            type: "POST",
+            url: "deletemessage.php",
+            data: { messageid: message_id, },
+            success: function(data){//look at the code here, might not be neccessary
+                console.log("show report messages delete conected");
+                alert("Message Deleted!");
+                loadAdminPage(admin, page, session);
+            }
+        });
+    }
+    
+    function adminmoviereview(user, admin, movieid, page, session){
+        $.ajax({
+            type: "POST",
+            url: "adminmoviereview.php",
+            data: { username: user, 
+            subject: movieid },
+            success: function(data){
+                if(data){
+                    console.log("show messages conected");
+                    console.log(data);
+                    $("#msglst").html(data);
+                    $("#return").click(function(){
+                        loadAdminPage(admin, page, session);
+                    });
+                    $(".delete").click(function(){
+                        var user_reviewid = $(this).attr("id");
+                        deletereview(user_reviewid, admin, movieid, page, session);
+                    });
+                }else{
+                    loadAdminPage(admin, page, session);
+                    alert("Review Already Deleted!");
+                }
+                
+            }
+        });
+    }
+    
+    function deletereview(user_reviewid, admin, movieid, page, session){
+        $.ajax({
+            type: "POST",
+            url: "deletereview.php",
+            data: { reviewid: user_reviewid, },
+            success: function(data){//look at the code here, might not be neccessary
+                console.log("show messages delete conected");
+                alert("Review Deleted!");
+                loadAdminPage(admin, page, session);
+            }
+        });
+    }
+    
+    function markAsRead(msg){
+        $.ajax({
+            type: "GET",
+            url: "markasread.php",
+            data: { 
+                    movieid: msg,
+            },
+            success: function(data){
+                // nothing to do
             }
         });
     }
@@ -456,13 +615,57 @@ $(document).ready(function(){
                         loadLoginPage(session);
                     }
                 });
+                $(".reg").click(function(){
+                    register(session);
+                });
+                $("#about").click(function(){
+                    about(session);
+                });
+                $("#instruction").click(function(){
+                    instruction(session);
+                });
+                $("#logo").click(function(){
+                    logo(session);
+                });
             }
         });
     }
     
     
-    function instruction(){
-        
+    function instruction(session){
+         $.ajax({
+            url: "instruction.html",
+            success: function(data){
+                $("body").html(data);
+                $("#return").click(function() {
+                    if(session.hasOwnProperty("user")){
+                        login(session.user);
+                    }else{
+                        loadLoginPage(session);
+                    }
+                });
+                $(".reg").click(function(){
+                    register(session);
+                });
+                $("#about").click(function(){
+                    about(session);
+                });
+                $("#instruction").click(function(){
+                    instruction(session);
+                });
+                $("#logo").click(function(){
+                    logo(session);
+                });
+            }
+        });
+    }
+    
+     function logo(session){
+        if(session.hasOwnProperty("user")){
+            login(session.user);
+        }else{
+            loadLoginPage(session);
+        }
     }
     
     
